@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.123.0/http/server.ts";
 
 const port = 10000;
 
-const handler = async (request: Request): Response => {
+const handler = async (request: Request): Promise<Response> => {
   const { pathname, searchParams, host } = new URL(request.url);
   
   if (pathname.startsWith("/api")) {
@@ -26,7 +26,7 @@ const handler = async (request: Request): Response => {
   }
 
   if (pathname.startsWith("/videoplayback")) {
-    const _api = searchParams.get("host");
+    const _api = searchParams.get("host") as string;
     
     request = new Request(request.url.replace(host, _api), request);
     request.headers.set('Origin',"https://"+ _api);
