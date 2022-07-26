@@ -3,12 +3,12 @@ import { serve } from "https://deno.land/std@0.123.0/http/server.ts";
 const port = 3000;
 
 const handler = async (request: Request): Promise<Response> => {
-  const { pathname, searchParams, host } = new URL(request.url);
+  const { pathname, searchParams, origin } = new URL(request.url);
 
   if (pathname.startsWith("/api")) {
     const _api = "manifest.googlevideo.com";
-//     console.log(request.url.replace(host, _api));
-    request = new Request(request.url.replace('http://' + host, 'https://' + _api), request);
+    //     console.log(request.url.replace(host, _api));
+    request = new Request(request.url.replace(origin, 'https://' + _api), request);
     request.headers.set('Origin', "https://" + _api);
 
     let response = await fetch(request);
@@ -23,28 +23,24 @@ const handler = async (request: Request): Promise<Response> => {
     response = new Response(body, response);
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.append('Vary', 'Origin');
-    
+
     return response;
 
   }
 
-  if (pathname.startsWith("/videoplayback")) {
-    const _api = searchParams.get("host") as string;
 
-    request = new Request(request.url.replace(host, _api), request);
-    request.headers.set('Origin', "https://" + _api);
+  const _api = searchParams.get("host") as string;
 
-    let response = await fetch(request);
-    response = new Response(response.body, response);
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.append('Vary', 'Origin');
-    response = new Response(response.body, response);
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.append('Vary', 'Origin');
-    
-    return response;
-  }
-  return new Response("Unknown URL", { status: 500, headers: { 'Content-Type': 'text/plain' } });
+  request = new Request(request.url.replace(origin, 'https://' + _api), request);
+  request.headers.set('Origin', "https://" + _api);
+
+  let response = await fetch(request);
+  response = new Response(response.body, response);
+
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.append('Vary', 'Origin');
+
+  return response;
 };
 
 console.log(`HTTP webserver running on port ${port}.`);
