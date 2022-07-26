@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.123.0/http/server.ts";
 
-const port = 10000;
+const port = 443;
 
 const handler = async (request: Request): Promise<Response> => {
   const { pathname, searchParams, host } = new URL(request.url);
@@ -38,7 +38,6 @@ const handler = async (request: Request): Promise<Response> => {
     response = new Response(response.body, response)
     return response;
   }
-  return new Response("Unknown path", {status: 500, headers: {'content-type': 'text/plain'}});
 };
 
 console.log(`HTTP webserver running on port ${port}.`);
