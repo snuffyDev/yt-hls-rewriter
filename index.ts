@@ -21,6 +21,9 @@ const handler = async (request: Request): Promise<Response> => {
     const regex = /(\/(?:api|videoplayback)(?:.*?))(?=\n|")/gm;
     body = body.replace(regex, "$1?host=" + searchParams.get('host'));
     response = new Response(body, response);
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.append('Vary', 'Origin');
+    
     return response;
 
   }
@@ -36,6 +39,9 @@ const handler = async (request: Request): Promise<Response> => {
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.append('Vary', 'Origin');
     response = new Response(response.body, response);
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.append('Vary', 'Origin');
+    
     return response;
   }
   return new Response("Unknown URL", { status: 500, headers: { 'Content-Type': 'text/plain' } });
