@@ -1,6 +1,6 @@
-import { serve } from "https://deno.land/std@0.123.0/http/server.ts";
+import { serveTls } from "https://deno.land/std@0.123.0/http/server.ts";
 
-const port = 443;
+const port = 80;
 
 const handler = async (request: Request): Promise<Response> => {
   const { pathname, searchParams, host } = new URL(request.url);
