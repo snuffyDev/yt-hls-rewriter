@@ -41,4 +41,4 @@ const handler = async (request: Request): Response => {
 };
 
 console.log(`HTTP webserver running on port ${port}.`);
-await serve(handler, { hostname: "0.0.0.0", port: port });
+await serve(await handler, { hostname: "0.0.0.0", port: port });
