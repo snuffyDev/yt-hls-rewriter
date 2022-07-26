@@ -9,19 +9,19 @@ const handler = async (request: Request): Promise<Response> => {
     const _api = "manifest.googlevideo.com";
     //     console.log(request.url.replace(host, _api));
     request = new Request(request.url.replace(origin, 'https://' + _api), request);
-    request.headers.set('Origin', "https://" + _api);
+    request.headers.set('Origin', new URL(request.url).origin);
 
     let response = await fetch(request);
     response = new Response(response.body, response);
-    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Origin', new URL(request.url).origin);
     response.headers.append('Vary', 'Origin');
 
     let body = await (await response.clone()).text();
-    body = body.replace(/https:\/\/(.*?)\//gm, '/');
+    body = body.replace(/https:\/\/(.*?)\//gm, new URL(request.url).origin);
     const regex = /(\/(?:api|videoplayback)(?:.*?))(?=\n|")/gm;
     body = body.replace(regex, "$1?host=" + searchParams.get('host'));
     response = new Response(body, response);
-    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Origin', new URL(request.url).origin);
     response.headers.append('Vary', 'Origin');
 
     return response;
@@ -32,12 +32,12 @@ const handler = async (request: Request): Promise<Response> => {
   const _api = searchParams.get("host") as string;
 
   request = new Request(request.url.replace(origin, 'https://' + _api), request);
-  request.headers.set('Origin', "https://" + _api);
+  request.headers.set('Origin', new URL(request.url).origin);
 
   let response = await fetch(request);
   response = new Response(response.body, response);
 
-  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Origin', new URL(request.url).origin);
   response.headers.append('Vary', 'Origin');
 
   return response;
