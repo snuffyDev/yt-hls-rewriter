@@ -9,16 +9,16 @@ const handler = async (request: Request): Promise<Response> => {
 		const _api = "manifest.googlevideo.com";
 
 		request = new Request(request.url.replace(origin, 'https://' + _api), request);
-		request.headers.set('Origin', new URL(request.url).origin);
+		request.headers.set('Origin', "https://" + _api);
 
 		let response = await fetch(request);
 
 		response = new Response(response.body, response);
-		response.headers.set('Access-Control-Allow-Origin', new URL(request.url).origin);
+		response.headers.set('Access-Control-Allow-Origin', "*");
 		response.headers.append('Vary', 'Origin');
 
 		let body = await (await response.clone()).text();
-		body = body.replace(/https:\/\/(.*?)\//gm, new URL(request.url).origin);
+		body = body.replace(/https:\/\/(.*?)\//gm, "/");
 
 		const regex = /(\/(?:api|videoplayback)(?:.*?))(?=\n|")/gm;
 
@@ -29,7 +29,7 @@ const handler = async (request: Request): Promise<Response> => {
 			// console.log(body,);
 		}
 		response = new Response(body, response);
-		response.headers.set('Access-Control-Allow-Origin', new URL(request.url).origin);
+		response.headers.set('Access-Control-Allow-Origin', "*");
 		response.headers.append('Vary', 'Origin');
 
 		return response;
