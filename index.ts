@@ -26,6 +26,7 @@ const handler = async (request: Request): Promise<Response> => {
 		if (body.match(/(#EXT-X-MAP:URI=".*?)/gm)) {
 
 			body = body.replace(/(#EXT-X-MAP:URI=".*?)(?:\?)(host=.*")/gm, "$1&$2");
+			console.log(body,);
 		}
 		response = new Response(body, response);
 		response.headers.set('Access-Control-Allow-Origin', new URL(request.url).origin);
