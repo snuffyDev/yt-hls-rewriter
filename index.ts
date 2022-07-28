@@ -44,13 +44,13 @@ const handler = async (request: Request): Promise<Response> => {
 
 	let response = await fetch(request);
 	const { readable, writable } = new TransformStream();
-	response.body.pipeTo(writable);
-	response = new Response(readable, response);
+	response = new Response(response.body, response);
 
 	response.headers.set('Access-Control-Allow-Origin', '*');
 	response.headers.append('Vary', 'Origin');
 
-	return response;
+	response.body.pipeTo(writable);
+	return new Response(readable, response);
 };
 
 console.log(`HTTP webserver running on port ${port}.`);
