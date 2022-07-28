@@ -43,7 +43,9 @@ const handler = async (request: Request): Promise<Response> => {
 	request.headers.set('Origin', "https://" + _api);
 
 	let response = await fetch(request);
-	response = new Response(response.body, response);
+	const { readable, writable } = new TransformStream();
+	response.body.pipeTo(writable);
+	response = new Response(readable, response);
 
 	response.headers.set('Access-Control-Allow-Origin', '*');
 	response.headers.append('Vary', 'Origin');
