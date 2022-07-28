@@ -48,9 +48,12 @@ const handler = async (request: Request): Promise<Response> => {
 
 	response.headers.set('Access-Control-Allow-Origin', '*');
 	response.headers.append('Vary', 'Origin');
+	if (response.body) {
 
-	response.body.pipeTo(writable);
-	return new Response(readable, response);
+		response.body.pipeTo(writable);
+		return new Response(readable, response);
+	}
+	return response;
 };
 
 console.log(`HTTP webserver running on port ${port}.`);
