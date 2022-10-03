@@ -50,8 +50,10 @@ const handler = async (request: Request): Promise<Response> => {
     let response = await fetch(request);
 
     response = new Response(response.body, response);
-    response.body.pipeTo(writable);
-
+    if (response.body !== null) {
+      response.body.pipeTo(writable);
+    }
+    
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.append("Vary", "Origin");
 
