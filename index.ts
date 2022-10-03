@@ -37,6 +37,7 @@ const handler = async (request: Request): Promise<Response> => {
 
       return response;
     }
+    let { readable, writable } = new TransformStream();
 
     const _api = searchParams.get("host") as string;
 
@@ -49,11 +50,12 @@ const handler = async (request: Request): Promise<Response> => {
     let response = await fetch(request);
 
     response = new Response(response.body, response);
+    response.body.pipeTo(writable);
 
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.append("Vary", "Origin");
 
-    return response;
+    return new Response(readable, response);
   } catch (error) {
     console.error(error);
     return new Response(error, {
